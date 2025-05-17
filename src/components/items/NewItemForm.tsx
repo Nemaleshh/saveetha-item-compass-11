@@ -10,11 +10,12 @@ import { ItemPlace, ItemType, ItemStatus } from "@/types";
 import { useData } from "@/context/data-context";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
-import { AlertTriangle, Calendar as CalendarIcon } from "lucide-react";
+import { AlertTriangle, Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 export function NewItemForm() {
   const { user } = useAuth();
@@ -29,6 +30,8 @@ export function NewItemForm() {
   const [status, setStatus] = useState<ItemStatus>("lost");
   const [photo, setPhoto] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,11 +48,17 @@ export function NewItemForm() {
 
     setLoading(true);
     try {
+      // Upload image if one is selected but not yet uploaded
+      let finalPhotoUrl = photo;
+      if (imageFile && !photo) {
+        finalPhotoUrl = await uploadImage(imageFile);
+      }
+
       await addItem({
         userName: user.name,
         userPhone,
         productName,
-        photo,
+        photo: finalPhotoUrl,
         place,
         date: selectedDate.toISOString(),
         type,
@@ -66,17 +75,50 @@ export function NewItemForm() {
     }
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Mock file upload with placeholder URLs
-    const photoOptions = [
-      "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9",
-      "https://images.unsplash.com/photo-1582562124811-c09040d0a901",
-      "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1"
-    ];
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
     
-    // Randomly select one of the placeholder images
-    const randomIndex = Math.floor(Math.random() * photoOptions.length);
-    setPhoto(photoOptions[randomIndex]);
+    // Store the file for later upload during form submission
+    setImageFile(file);
+    
+    // Create a preview
+    const objectUrl = URL.createObjectURL(file);
+    setPhoto(objectUrl);
+  };
+
+  const uploadImage = async (file: File): Promise<string | null> => {
+    if (!user) return null;
+    
+    setUploading(true);
+    try {
+      // Create a unique file path
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+      
+      // Upload to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('items')
+        .upload(filePath, file);
+        
+      if (error) {
+        throw error;
+      }
+      
+      // Get the public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('items')
+        .getPublicUrl(filePath);
+        
+      return publicUrl;
+    } catch (error) {
+      console.error('Error uploading image: ', error);
+      toast.error('Error uploading image. Please try again.');
+      return null;
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -191,7 +233,14 @@ export function NewItemForm() {
               type="file"
               accept="image/*"
               onChange={handlePhotoChange}
+              disabled={uploading}
             />
+            {uploading && (
+              <div className="flex items-center mt-2 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Uploading image...
+              </div>
+            )}
             {photo && (
               <div className="mt-2 relative aspect-[4/3] w-full max-w-md rounded-md overflow-hidden">
                 <img
@@ -204,8 +253,19 @@ export function NewItemForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "Submitting..." : "Submit Report"}
+          <Button 
+            type="submit" 
+            disabled={loading || uploading} 
+            className="w-full"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              "Submit Report"
+            )}
           </Button>
         </CardFooter>
       </form>
