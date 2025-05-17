@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { useAuth } from "@/context/auth-context";
 import { useData } from "@/context/data-context";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ItemCardProps {
   item: Item;
@@ -17,6 +18,7 @@ interface ItemCardProps {
 export function ItemCard({ item, showActions = true }: ItemCardProps) {
   const { user } = useAuth();
   const { updateItemStatus, deleteItem } = useData();
+  const isMobile = useIsMobile();
   
   const isOwner = user?.id === item.userId;
   const isAdmin = user?.role === "admin";
@@ -101,11 +103,11 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
       </CardContent>
       {showActions && canModify && item.status !== "completed" && (
         <CardFooter>
-          <div className="flex gap-2 w-full">
+          <div className={`flex ${isMobile ? "flex-col" : "flex-row gap-2"} w-full`}>
             <Button
               variant="outline"
               size="sm"
-              className="gap-1"
+              className={`gap-1 ${isMobile ? "mb-2 w-full" : ""}`}
               onClick={handleStatusUpdate}
             >
               <Check className="h-4 w-4" />
@@ -114,7 +116,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
             <Button
               variant="outline"
               size="sm"
-              className="gap-1 text-destructive hover:text-destructive"
+              className={`gap-1 text-destructive hover:text-destructive ${isMobile ? "w-full" : ""}`}
               onClick={handleDelete}
             >
               <Trash2 className="h-4 w-4" />

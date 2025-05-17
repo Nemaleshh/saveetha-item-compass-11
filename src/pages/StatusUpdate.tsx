@@ -9,11 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const StatusUpdate = () => {
   const { user } = useAuth();
   const { getUserItems } = useData();
   const [activeTab, setActiveTab] = useState<ItemStatus | "all">("all");
+  const isMobile = useIsMobile();
   
   const userItems = useMemo(() => {
     return getUserItems();
@@ -42,8 +44,8 @@ const StatusUpdate = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <FileCheck className="h-7 w-7" />
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-2">
+          <FileCheck className="h-6 w-6 md:h-7 md:w-7" />
           Manage Your Items
         </h1>
         <p className="text-muted-foreground">
@@ -57,12 +59,14 @@ const StatusUpdate = () => {
         onValueChange={(v) => setActiveTab(v as ItemStatus | "all")}
         className="space-y-4"
       >
-        <TabsList>
-          <TabsTrigger value="all">All Items</TabsTrigger>
-          <TabsTrigger value="lost">Lost</TabsTrigger>
-          <TabsTrigger value="found">Found</TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-1">
+          <TabsList className={isMobile ? "w-full grid grid-cols-4" : ""}>
+            <TabsTrigger value="all" className={isMobile ? "text-xs py-1.5" : ""}>All Items</TabsTrigger>
+            <TabsTrigger value="lost" className={isMobile ? "text-xs py-1.5" : ""}>Lost</TabsTrigger>
+            <TabsTrigger value="found" className={isMobile ? "text-xs py-1.5" : ""}>Found</TabsTrigger>
+            <TabsTrigger value="completed" className={isMobile ? "text-xs py-1.5" : ""}>Completed</TabsTrigger>
+          </TabsList>
+        </div>
         <TabsContent value={activeTab}>
           {userItems.length === 0 ? (
             <Alert>
