@@ -10,7 +10,11 @@ import { ItemPlace, ItemType, ItemStatus } from "@/types";
 import { useData } from "@/context/data-context";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Calendar as CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export function NewItemForm() {
   const { user } = useAuth();
@@ -20,7 +24,7 @@ export function NewItemForm() {
   const [productName, setProductName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [place, setPlace] = useState<ItemPlace>("lost");
-  const [date, setDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [type, setType] = useState<ItemType>("normal");
   const [status, setStatus] = useState<ItemStatus>("lost");
   const [photo, setPhoto] = useState<string | null>(null);
@@ -34,6 +38,11 @@ export function NewItemForm() {
       return;
     }
 
+    if (!selectedDate) {
+      toast.error("Please select a date");
+      return;
+    }
+
     setLoading(true);
     try {
       await addItem({
@@ -42,7 +51,7 @@ export function NewItemForm() {
         productName,
         photo,
         place,
-        date: date || new Date().toISOString(),
+        date: selectedDate.toISOString(),
         type,
         status,
       });
@@ -124,13 +133,29 @@ export function NewItemForm() {
           
           <div className="space-y-2">
             <Label htmlFor="date">Date</Label>
-            <Input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  id="date"
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !selectedDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           
           <div className="space-y-2">

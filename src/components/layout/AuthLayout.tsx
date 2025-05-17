@@ -38,7 +38,8 @@ export function AuthLayout() {
 
       <footer className="py-4 border-t">
         <div className="container text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Saveetha Engineering College - Lost & Found Portal
+          <p>© {new Date().getFullYear()} DAVNS INDUSTRIES. All rights reserved.</p>
+          <p className="mt-1 text-xs">Designed and developed by DAVNS Web Service</p>
         </div>
       </footer>
     </div>

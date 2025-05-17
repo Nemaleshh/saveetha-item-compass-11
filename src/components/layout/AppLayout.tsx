@@ -23,6 +23,12 @@ export function AppLayout() {
             <main className="flex-1 p-4 md:p-8">
               <Outlet />
             </main>
+            <footer className="py-4 border-t">
+              <div className="container text-center text-sm text-muted-foreground">
+                <p>© {new Date().getFullYear()} DAVNS INDUSTRIES. All rights reserved.</p>
+                <p className="mt-1 text-xs">Designed and developed by DAVNS Web Service</p>
+              </div>
+            </footer>
           </ScrollArea>
         </div>
       </div>
