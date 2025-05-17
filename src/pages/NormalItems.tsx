@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import { useData } from "@/context/data-context";
 import { ItemGrid } from "@/components/items/ItemGrid";
 import { ItemFilter } from "@/components/items/ItemFilter";
-import { ItemStatus } from "@/types";
+import { ItemStatus, ItemType } from "@/types";
 import { Calendar } from "lucide-react";
 
 const NormalItems = () => {
@@ -35,6 +35,18 @@ const NormalItems = () => {
     });
   }, [normalItems, filters]);
 
+  const handleFilterChange = (newFilters: {
+    search: string;
+    status: ItemStatus | "all";
+    type: ItemType | "all";
+  }) => {
+    setFilters({
+      search: newFilters.search,
+      status: newFilters.status,
+      type: "normal", // Always keep as normal for this page
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -47,7 +59,7 @@ const NormalItems = () => {
         </p>
       </div>
 
-      <ItemFilter onFilter={setFilters} />
+      <ItemFilter onFilter={handleFilterChange} />
 
       {loading ? (
         <div className="text-center p-8">Loading items...</div>
