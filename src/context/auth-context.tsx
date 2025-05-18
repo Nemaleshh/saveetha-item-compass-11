@@ -79,9 +79,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setUser({
         id: userId,
-        name: username,
+        name: data?.name || username,
         email: email,
-        role: data?.role || 'user',
+        role: (data?.role as UserRole) || 'user',
         createdAt: data?.created_at || new Date().toISOString()
       });
     } catch (error) {

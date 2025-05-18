@@ -71,7 +71,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         userPhone: item.user_phone,
         productName: item.product_name,
         photo: item.photo_url,
-        place: item.place as ItemPlace,
+        place: item.place,
         date: item.date,
         type: item.type as ItemType,
         status: item.status as ItemStatus,

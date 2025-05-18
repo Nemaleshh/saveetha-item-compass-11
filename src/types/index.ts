@@ -20,7 +20,7 @@ export interface Item {
   userPhone: string;
   productName: string;
   photo: string | null;
-  place: ItemPlace;
+  place: string;
   date: string;
   type: ItemType;
   status: ItemStatus;
