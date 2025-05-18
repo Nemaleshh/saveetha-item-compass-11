@@ -64,14 +64,14 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
               {formatDate(item.date)}
             </CardDescription>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
             <Badge className={getStatusColor(item.status)}>
               {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
             </Badge>
             {item.type === "emergency" && (
               <Badge variant="destructive" className="flex items-center gap-1">
                 <AlertTriangle className="h-3.5 w-3.5" />
-                Emergency
+                EMG
               </Badge>
             )}
           </div>
@@ -111,7 +111,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
               onClick={handleStatusUpdate}
             >
               <Check className="h-4 w-4" />
-              Mark as Completed
+              COMP
             </Button>
             <Button
               variant="outline"
@@ -120,7 +120,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
               onClick={handleDelete}
             >
               <Trash2 className="h-4 w-4" />
-              Delete
+              DEL
             </Button>
           </div>
         </CardFooter>

@@ -48,7 +48,7 @@ const Contact = () => {
               <div>
                 <p className="font-medium">Location</p>
                 <p className="text-sm text-muted-foreground">
-                  Student Services Building, Room 103
+                  Saveetha Engineering College.
                 </p>
               </div>
             </div>
@@ -60,7 +60,7 @@ const Contact = () => {
               <div>
                 <p className="font-medium">Email</p>
                 <p className="text-sm text-muted-foreground">
-                  lostandfound@sec.edu
+                  contact@lafdavns.site
                 </p>
               </div>
             </div>
@@ -72,14 +72,14 @@ const Contact = () => {
               <div>
                 <p className="font-medium">Phone</p>
                 <p className="text-sm text-muted-foreground">
-                  +91 98765 43210
+                  Updating....
                 </p>
               </div>
             </div>
           </CardContent>
           <CardFooter>
             <p className="text-sm text-muted-foreground">
-              Hours: Monday - Friday, 9:00 AM - 4:30 PM
+              Hours: Monday - Saturday, 8:00 AM - 4:30 PM
             </p>
           </CardFooter>
         </Card>
@@ -88,7 +88,7 @@ const Contact = () => {
           <CardHeader>
             <CardTitle>Send a Message</CardTitle>
             <CardDescription>
-              Fill out the form below and we'll get back to you
+              Fill out the form below and we'll get back to you(In Progress)
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
