@@ -48,7 +48,7 @@ const Contact = () => {
               <div>
                 <p className="font-medium">Location</p>
                 <p className="text-sm text-muted-foreground">
-                  Student Services Building, Room 103
+                  Saveetha Engineering College.
                 </p>
               </div>
             </div>
@@ -79,7 +79,7 @@ const Contact = () => {
           </CardContent>
           <CardFooter>
             <p className="text-sm text-muted-foreground">
-              Hours: Monday - Friday, 9:00 AM - 4:30 PM
+              Hours: Monday - Friday, 8:00 AM - 4:30 PM
             </p>
           </CardFooter>
         </Card>
