@@ -79,7 +79,7 @@ const Contact = () => {
           </CardContent>
           <CardFooter>
             <p className="text-sm text-muted-foreground">
-              Hours: Monday - Friday, 8:00 AM - 4:30 PM
+              Hours: Monday - Saturday, 8:00 AM - 4:30 PM
             </p>
           </CardFooter>
         </Card>
