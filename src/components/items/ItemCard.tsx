@@ -111,7 +111,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
               onClick={handleStatusUpdate}
             >
               <Check className="h-4 w-4" />
-              Mark if Found
+              Completed
             </Button>
             <Button
               variant="outline"
