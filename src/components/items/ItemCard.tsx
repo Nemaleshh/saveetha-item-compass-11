@@ -71,6 +71,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
             {item.type === "emergency" && (
               <Badge variant="destructive" className="flex items-center gap-1">
                 <AlertTriangle className="h-3.5 w-3.5" />
+                EMG
               </Badge>
             )}
           </div>
@@ -110,7 +111,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
               onClick={handleStatusUpdate}
             >
               <Check className="h-4 w-4" />
-              Mark as Completed
+              Mark if Found
             </Button>
             <Button
               variant="outline"
