@@ -64,7 +64,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
               {formatDate(item.date)}
             </CardDescription>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
             <Badge className={getStatusColor(item.status)}>
               {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
             </Badge>
