@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/database.types";
 
 type ItemRow = Database['public']['Tables']['items']['Row'];
+type ItemInsert = Database['public']['Tables']['items']['Insert'];
 
 interface DataContextType {
   items: Item[];
@@ -57,9 +58,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const fetchItems = async () => {
     setLoading(true);
     try {
-      // Use typecasting to let TypeScript know we're accessing the items table
+      // Cast the table name using 'as const' to help TypeScript recognize it
       const { data, error } = await supabase
-        .from('items')
+        .from('items' as const)
         .select('*')
         .order('created_at', { ascending: false });
       
@@ -101,21 +102,21 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       // Create the item in Supabase
+      const itemData: ItemInsert = {
+        user_id: user.id,
+        user_name: user.name,
+        user_phone: newItemData.userPhone,
+        product_name: newItemData.productName,
+        photo_url: newItemData.photo,
+        place: newItemData.place,
+        date: new Date(newItemData.date).toISOString().split('T')[0],
+        type: newItemData.type,
+        status: newItemData.status
+      };
+
       const { data, error } = await supabase
-        .from('items')
-        .insert([
-          {
-            user_id: user.id,
-            user_name: user.name,
-            user_phone: newItemData.userPhone,
-            product_name: newItemData.productName,
-            photo_url: newItemData.photo,
-            place: newItemData.place,
-            date: new Date(newItemData.date).toISOString().split('T')[0],
-            type: newItemData.type,
-            status: newItemData.status
-          }
-        ])
+        .from('items' as const)
+        .insert([itemData])
         .select();
 
       if (error) {
@@ -139,8 +140,11 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       const { error } = await supabase
-        .from('items')
-        .update({ status, updated_at: new Date().toISOString() })
+        .from('items' as const)
+        .update({ 
+          status, 
+          updated_at: new Date().toISOString() 
+        })
         .eq('id', id);
 
       if (error) {
@@ -172,7 +176,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       
       // Delete the item from Supabase
       const { error } = await supabase
-        .from('items')
+        .from('items' as const)
         .delete()
         .eq('id', id);
 
@@ -218,7 +222,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     
     setLoading(true);
     try {
-      let query = supabase.from('items').delete();
+      let query = supabase.from('items' as const).delete();
       
       // Apply date filter if provided
       if (dateRange) {

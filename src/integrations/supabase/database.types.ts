@@ -78,5 +78,20 @@ export interface Database {
         }
       }
     }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      get_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }

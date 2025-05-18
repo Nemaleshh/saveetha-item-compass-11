@@ -3,6 +3,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { User, UserRole } from "@/types";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/database.types";
+
+type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
 interface AuthContextType {
   user: User | null;
@@ -74,15 +77,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw error;
       }
 
+      const profile = data as ProfileRow;
+      
       // Get username from email (part before @)
       const username = email.split('@')[0];
 
       setUser({
         id: userId,
-        name: data?.name || username,
+        name: profile?.name || username,
         email: email,
-        role: (data?.role as UserRole) || 'user',
-        createdAt: data?.created_at || new Date().toISOString()
+        role: (profile?.role as UserRole) || 'user',
+        createdAt: profile?.created_at || new Date().toISOString()
       });
     } catch (error) {
       console.error("Error fetching user profile:", error);
