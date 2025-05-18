@@ -64,7 +64,6 @@ const Login = () => {
           <div className="relative my-4">
             <Separator />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="bg-card px-2 text-xs text-muted-foreground">OR</span>
             </div>
           </div>
           
