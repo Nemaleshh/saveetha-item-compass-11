@@ -71,7 +71,6 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
             {item.type === "emergency" && (
               <Badge variant="destructive" className="flex items-center gap-1">
                 <AlertTriangle className="h-3.5 w-3.5" />
-                Emergency
               </Badge>
             )}
           </div>
