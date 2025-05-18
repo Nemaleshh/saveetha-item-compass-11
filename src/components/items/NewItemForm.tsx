@@ -25,6 +25,7 @@ export function NewItemForm() {
   const [productName, setProductName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [place, setPlace] = useState<ItemPlace>("lost");
+  const [location, setLocation] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [type, setType] = useState<ItemType>("normal");
   const [status, setStatus] = useState<ItemStatus>("lost");
@@ -46,20 +47,52 @@ export function NewItemForm() {
       return;
     }
 
+    if (!location.trim()) {
+      toast.error("Please enter the location where the item was lost/found");
+      return;
+    }
+
     setLoading(true);
     try {
-      // Upload image if one is selected but not yet uploaded
-      let finalPhotoUrl = photo;
-      if (imageFile && !photo) {
-        finalPhotoUrl = await uploadImage(imageFile);
+      // Upload image if selected
+      let imagePath = null;
+      if (imageFile) {
+        setUploading(true);
+        
+        try {
+          // Create a unique file path with userId prefix for better organization
+          const fileExt = imageFile.name.split('.').pop();
+          const fileName = `${user.id}/${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+          
+          // Upload to Supabase Storage
+          const { data, error } = await supabase.storage
+            .from('items')
+            .upload(fileName, imageFile);
+            
+          if (error) {
+            throw error;
+          }
+          
+          // Get the public URL
+          const { data: publicUrlData } = supabase.storage
+            .from('items')
+            .getPublicUrl(fileName);
+            
+          imagePath = publicUrlData?.publicUrl || null;
+        } catch (error) {
+          console.error('Error uploading image: ', error);
+          toast.error('Error uploading image. Please try again.');
+        } finally {
+          setUploading(false);
+        }
       }
 
       await addItem({
         userName: user.name,
         userPhone,
         productName,
-        photo: finalPhotoUrl,
-        place,
+        photo: imagePath,
+        place: location, // Use the specific location field
         date: selectedDate.toISOString(),
         type,
         status,
@@ -75,50 +108,16 @@ export function NewItemForm() {
     }
   };
 
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    // Store the file for later upload during form submission
+    // Store the file for later upload
     setImageFile(file);
     
     // Create a preview
     const objectUrl = URL.createObjectURL(file);
     setPhoto(objectUrl);
-  };
-
-  const uploadImage = async (file: File): Promise<string | null> => {
-    if (!user) return null;
-    
-    setUploading(true);
-    try {
-      // Create a unique file path
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
-      
-      // Upload to Supabase Storage
-      const { data, error } = await supabase.storage
-        .from('items')
-        .upload(filePath, file);
-        
-      if (error) {
-        throw error;
-      }
-      
-      // Get the public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('items')
-        .getPublicUrl(filePath);
-        
-      return publicUrl;
-    } catch (error) {
-      console.error('Error uploading image: ', error);
-      toast.error('Error uploading image. Please try again.');
-      return null;
-    } finally {
-      setUploading(false);
-    }
   };
 
   return (
@@ -171,6 +170,20 @@ export function NewItemForm() {
                 <Label htmlFor="found">Found Item</Label>
               </div>
             </RadioGroup>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="location">Location</Label>
+            <Input
+              id="location"
+              placeholder="Where was the item lost/found?"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              required
+            />
+            <p className="text-xs text-muted-foreground">
+              Please be specific about where on campus
+            </p>
           </div>
           
           <div className="space-y-2">

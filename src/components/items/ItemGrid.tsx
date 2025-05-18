@@ -1,6 +1,7 @@
 
-import { Item } from "@/types";
 import { ItemCard } from "./ItemCard";
+import { Item } from "@/types";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ItemGridProps {
   items: Item[];
@@ -8,16 +9,10 @@ interface ItemGridProps {
 }
 
 export function ItemGrid({ items, showActions = true }: ItemGridProps) {
-  if (items.length === 0) {
-    return (
-      <div className="text-center p-8 border rounded-lg bg-muted/20">
-        <p className="text-muted-foreground">No items found</p>
-      </div>
-    );
-  }
-
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className={`grid gap-4 ${isMobile ? 'grid-cols-2' : 'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}`}>
       {items.map((item) => (
         <ItemCard key={item.id} item={item} showActions={showActions} />
       ))}

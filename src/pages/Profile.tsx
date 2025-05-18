@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { useAuth } from "@/context/auth-context";
 import { useData } from "@/context/data-context";
 import { ItemGrid } from "@/components/items/ItemGrid";
@@ -13,14 +14,19 @@ const Profile = () => {
   const { getUserItems } = useData();
   const navigate = useNavigate();
   
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+  
+  if (!user) {
+    return null;
+  }
+  
   const userItems = getUserItems();
   const activeItems = userItems.filter(item => item.status !== "completed");
   const completedItems = userItems.filter(item => item.status === "completed");
-  
-  if (!user) {
-    navigate("/login");
-    return null;
-  }
   
   const formatDate = (dateString: string) => {
     try {
@@ -28,6 +34,11 @@ const Profile = () => {
     } catch (error) {
       return "Unknown date";
     }
+  };
+
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    logout();
   };
 
   return (
@@ -69,10 +80,7 @@ const Profile = () => {
             <Button 
               variant="outline" 
               className="w-full"
-              onClick={() => {
-                logout();
-                navigate("/");
-              }}
+              onClick={handleLogout}
             >
               Log Out
             </Button>

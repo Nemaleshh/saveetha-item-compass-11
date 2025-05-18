@@ -54,7 +54,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
   };
 
   return (
-    <Card className={item.type === "emergency" ? "border-emergency" : ""}>
+    <Card className={`h-full flex flex-col ${item.type === "emergency" ? "border-emergency" : ""}`}>
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
@@ -77,7 +77,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2 flex-grow">
         {item.photo && (
           <div className="relative aspect-[4/3] rounded-md overflow-hidden mb-4">
             <img
@@ -89,11 +89,11 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
         )}
         <div className="grid gap-2">
           <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">{item.place.charAt(0).toUpperCase() + item.place.slice(1)} at Saveetha Engineering College</span>
+            <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="text-sm break-words">{item.place}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Phone className="h-4 w-4 text-muted-foreground" />
+            <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
             <span className="text-sm">{item.userPhone}</span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
@@ -102,12 +102,12 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
         </div>
       </CardContent>
       {showActions && canModify && item.status !== "completed" && (
-        <CardFooter>
-          <div className={`flex ${isMobile ? "flex-col" : "flex-row gap-2"} w-full`}>
+        <CardFooter className="pt-2 mt-auto">
+          <div className={`flex ${isMobile ? "flex-col w-full" : "gap-2"}`}>
             <Button
               variant="outline"
               size="sm"
-              className={`gap-1 ${isMobile ? "mb-2 w-full" : ""}`}
+              className={`gap-1 ${isMobile ? "mb-2 w-full" : "flex-1"}`}
               onClick={handleStatusUpdate}
             >
               <Check className="h-4 w-4" />
@@ -116,7 +116,7 @@ export function ItemCard({ item, showActions = true }: ItemCardProps) {
             <Button
               variant="outline"
               size="sm"
-              className={`gap-1 text-destructive hover:text-destructive ${isMobile ? "w-full" : ""}`}
+              className={`gap-1 text-destructive hover:text-destructive ${isMobile ? "w-full" : "flex-1"}`}
               onClick={handleDelete}
             >
               <Trash2 className="h-4 w-4" />
