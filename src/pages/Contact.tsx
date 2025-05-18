@@ -60,7 +60,7 @@ const Contact = () => {
               <div>
                 <p className="font-medium">Email</p>
                 <p className="text-sm text-muted-foreground">
-                  lostandfound@sec.edu
+                  contact@lafdavns.site
                 </p>
               </div>
             </div>
@@ -72,7 +72,7 @@ const Contact = () => {
               <div>
                 <p className="font-medium">Phone</p>
                 <p className="text-sm text-muted-foreground">
-                  +91 98765 43210
+                  Updating....
                 </p>
               </div>
             </div>
@@ -88,7 +88,7 @@ const Contact = () => {
           <CardHeader>
             <CardTitle>Send a Message</CardTitle>
             <CardDescription>
-              Fill out the form below and we'll get back to you
+              Fill out the form below and we'll get back to you(In Progress)
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
