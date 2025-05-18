@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect } from "react";
 import { Item, ItemPlace, ItemStatus, ItemType } from "@/types";
 import { useAuth } from "./auth-context";
@@ -58,9 +57,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const fetchItems = async () => {
     setLoading(true);
     try {
-      // Cast the table name using 'as const' to help TypeScript recognize it
       const { data, error } = await supabase
-        .from('items' as const)
+        .from('items')
         .select('*')
         .order('created_at', { ascending: false });
       
@@ -115,7 +113,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       };
 
       const { data, error } = await supabase
-        .from('items' as const)
+        .from('items')
         .insert([itemData])
         .select();
 
@@ -140,7 +138,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       const { error } = await supabase
-        .from('items' as const)
+        .from('items')
         .update({ 
           status, 
           updated_at: new Date().toISOString() 
@@ -176,7 +174,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       
       // Delete the item from Supabase
       const { error } = await supabase
-        .from('items' as const)
+        .from('items')
         .delete()
         .eq('id', id);
 
@@ -222,7 +220,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     
     setLoading(true);
     try {
-      let query = supabase.from('items' as const).delete();
+      let query = supabase.from('items').delete();
       
       // Apply date filter if provided
       if (dateRange) {

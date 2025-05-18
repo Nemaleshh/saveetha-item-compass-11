@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setUser({
         id: userId,
-        name: profile?.name || username,
+        name: profile?.name || username, // Use profile name or fallback to username
         email: email,
         role: (profile?.role as UserRole) || 'user',
         createdAt: profile?.created_at || new Date().toISOString()
