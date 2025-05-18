@@ -26,9 +26,20 @@ export function AppLayout() {
             <footer className="py-4 border-t">
               <div className="container text-center text-sm text-muted-foreground">
                 <p>© {new Date().getFullYear()} DAVNS INDUSTRIES. All rights reserved.</p>
-                <p className="mt-1 text-xs">Designed and developed by DAVNS Web Service</p>
+                <p className="mt-1 text-xs">
+                  Designed and developed by DAVNS Web Service. Visit us at{" "}
+                  <a
+                    href="https://davns.in"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    davns.in
+                  </a>
+                </p>
               </div>
             </footer>
+
           </ScrollArea>
         </div>
       </div>
