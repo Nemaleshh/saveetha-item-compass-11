@@ -4,6 +4,9 @@ import { Item, ItemPlace, ItemStatus, ItemType } from "@/types";
 import { useAuth } from "./auth-context";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/database.types";
+
+type ItemRow = Database['public']['Tables']['items']['Row'];
 
 interface DataContextType {
   items: Item[];
@@ -54,6 +57,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const fetchItems = async () => {
     setLoading(true);
     try {
+      // Use typecasting to let TypeScript know we're accessing the items table
       const { data, error } = await supabase
         .from('items')
         .select('*')
@@ -64,7 +68,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       }
       
       // Map Supabase data to our Item interface
-      const formattedItems: Item[] = data.map(item => ({
+      const formattedItems: Item[] = (data as ItemRow[]).map(item => ({
         id: item.id,
         userId: item.user_id,
         userName: item.user_name,
